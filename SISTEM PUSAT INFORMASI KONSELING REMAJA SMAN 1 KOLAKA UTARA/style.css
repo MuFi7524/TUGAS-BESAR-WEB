@@ -1,0 +1,316 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f8fc; /* Background putih kebiruan */
+    color: #333;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(90deg, #007BFF, #0056B3); /* Biru modern */
+    padding: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Memungkinkan elemen-elemen dalam header untuk berpindah ke baris berikutnya jika layar sempit */
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.logo-header {
+    max-height: 80px;
+    margin-right: 20px;
+    flex: 1; /* Membuat logo responsif agar tidak terlalu besar */
+    max-width: 0px; /* Membatasi ukuran maksimum logo */
+}
+
+/* Pengaturan untuk teks header */
+.header-text h1 {
+    font-size: 26px;
+    margin: 0 50px 0 ;
+    color: #ffffff;
+    flex: 2; /* Membuat teks lebih responsif */
+}
+
+.header-text p {
+    margin: 5px 50px 0;
+    font-size: 14px;
+    color: #e0e0e0; /* Abu-abu terang */
+}
+
+/* Pengaturan untuk kontak header */
+.header-contact p {
+    margin: 5px 300px ;
+    font-size: 14px;
+    color: #d9ecff;
+}
+
+/* Menambahkan style untuk ikon kontak */
+.header-contact i {
+    margin-right: 8px;
+}
+
+/* Responsif - header untuk perangkat lebih kecil */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px; /* Mengurangi padding pada header */
+    }
+
+    .header-text h1 {
+        font-size: 22px; /* Mengurangi ukuran font pada judul */
+        margin: 0 20px; /* Menyesuaikan margin */
+    }
+
+    .header-text p {
+        margin: 5px 20px 0;
+        font-size: 12px; /* Mengurangi ukuran font pada deskripsi */
+    }
+
+    .header-contact p {
+        margin: 5px 20px ;
+        font-size: 12px;
+    }
+
+    .header-contact i {
+        margin-right: 5px; /* Menyesuaikan margin ikon */
+    }
+
+    .logo-header {
+        max-height: 60px; /* Menurunkan ukuran logo pada perangkat kecil */
+        margin-right: 15px;
+    }
+}
+/* Navigation Bar */
+.navbar {
+    background: #0056B3; /* Biru tua */
+    display: flex;
+    justify-content: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative; /* Agar bisa memposisikan navbar-links dengan benar */
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+.navbar a:hover {
+    background: #ffffff; /* Putih bersih */
+    color: #0056B3; /* Biru tua */
+}
+
+.navbar-links {
+    display: flex;
+    gap: 20px; /* Jarak antar menu */
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        background: #0056B3;
+        position: absolute; /* Memastikan menu berada di bawah navbar */
+        top: 100%; /* Memposisikan menu tepat di bawah navbar */
+        left: 0;
+        padding: 10px 0;
+        z-index: 1; /* Agar menu muncul di atas konten lainnya */
+    }
+
+    .navbar-links a {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .navbar-links.active {
+        display: flex;
+    }
+}
+/* Fullscreen Slideshow Styles */
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Mengambil tinggi penuh layar */
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: #f4f8fc; /* Warna latar belakang default jika gambar gagal dimuat */
+}
+.slides-wrapper {
+    display: flex;
+    width: 100%; /* Menyesuaikan jumlah slide */
+    transform: translateX(0); /* Default posisi slide */
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.slide {
+    flex: 0 0 100%;
+    height: 100%;
+}
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Gambar akan sepenuhnya terlihat dalam slide */
+    background: #fff; /* Tambahkan latar belakang jika ada ruang kosong */
+}
+
+/* Navigation Dots */
+.slideshow-navigation {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    margin: 5px;
+    background-color: #d9ecff;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #0056B3;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .slideshow-container {
+        height: 100vh; /* Tetap memenuhi layar di perangkat kecil */
+    }
+}
+
+
+/* Main Content */
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 30px; /* Space between sections */
+}
+
+.section {
+    background-color: #f8f9fa; /* Light background color for each section */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for headings */
+h1, h2 {
+    color: #003366;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-top: 15px;
+}
+
+/* Styling for paragraphs */
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Styling for unordered lists */
+ul {
+    padding-left: 20px;
+    list-style-type: square;
+}
+
+ul li {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Image and Info section */
+.instansi-info {
+    display: flex;
+    gap: 20px;
+    align-items: center; /* Menjaga agar gambar dan teks sejajar secara vertikal */
+}
+
+.logo {
+    width: 100px; /* Ukuran logo */
+    height: 100px; /* Ukuran logo */
+    object-fit: contain; /* Pastikan gambar tidak terpotong dan tetap mempertahankan proporsinya */
+    border-radius: 8px; /* Menambahkan sudut melengkung agar lebih rapi */
+}
+
+.map-container {
+    margin-top: 20px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .instansi-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    p, ul {
+        font-size: 1rem;
+    }
+}
+
+/* Footer */
+.footer {
+    background: #007BFF; /* Biru modern */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+/* Menambahkan Smooth Scroll ke seluruh halaman */
+html {
+    scroll-behavior: smooth;
+}

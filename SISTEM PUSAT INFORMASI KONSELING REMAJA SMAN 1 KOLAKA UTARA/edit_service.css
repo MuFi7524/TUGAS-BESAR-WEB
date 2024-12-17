@@ -1,0 +1,141 @@
+/* Same Global Styles as `manage_users` */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(90deg, #007BFF, #0056B3);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Wrapper */
+.dashboard-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #003366;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar h2 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.sidebar ul li {
+    margin: 20px 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: block;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background-color: #0056B3;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    background-color: #ffffff;
+    padding: 50px;
+    overflow-y: auto;
+}
+
+/* Form */
+form {
+    max-width: 1000px; /* Perlebar form */
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+form h2 {
+    font-size: 1.8rem;
+    color: #003366;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+label {
+    font-size: 1.1rem;
+    color: #003366;
+}
+
+input, textarea {
+    padding: 12px; /* Lebih lebar */
+    font-size: 1.1rem;
+    border: 2px solid #003366;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+textarea {
+    height: 180px; /* Perbesar textarea */
+    resize: vertical;
+}
+
+button {
+    padding: 18px; /* Lebih besar tombol */
+    font-size: 1.2rem;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056B3;
+}
+
+a.btn {
+    padding: 18px; /* Sesuaikan dengan ukuran tombol */
+    text-align: center;
+    background-color: #f1f1f1;
+    border: 2px solid #003366;
+    border-radius: 8px;
+    color: #003366;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+a.btn:hover {
+    background-color: #003366;
+    color: white;
+}
