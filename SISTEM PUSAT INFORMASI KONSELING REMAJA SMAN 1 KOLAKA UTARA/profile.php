@@ -7,10 +7,21 @@ $edit_profile_message = "";
 $update_credentials_message = "";
 $delete_account_message = "";
 
-// Cek apakah pengguna sudah login dan memiliki role 'user'
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'user') {
-    echo "Akses ditolak. Hanya pengguna dengan role 'user' yang dapat mengakses halaman ini.";
+// Periksa apakah cookie masih ada dan role adalah user
+if (!isset($_COOKIE['username']) || !isset($_COOKIE['role']) || $_COOKIE['role'] !== 'user') {
+    // Hapus sesi jika cookie habis atau role salah
+    session_unset();
+    session_destroy();
+
+    // Redirect ke halaman login
+    header('Location: login.php');
     exit();
+}
+
+// Sinkronisasi cookie dengan session jika cookie masih valid
+if (isset($_COOKIE['username']) && isset($_COOKIE['role'])) {
+    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['role'] = $_COOKIE['role'];
 }
 
 // Cek NISN dari sesi
