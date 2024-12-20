@@ -1,8 +1,21 @@
 <?php
 session_start();
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+include('db_connection.php'); // Koneksi ke database
+// Periksa apakah cookie masih ada
+if (!isset($_COOKIE['username']) || !isset($_COOKIE['role']) || $_COOKIE['role'] !== 'admin') {
+    // Hapus sesi jika cookie habis
+    session_unset();
+    session_destroy();
+
+    // Redirect ke halaman login
     header('Location: login.php');
     exit();
+}
+
+// Sinkronisasi cookie dengan session jika cookie masih valid
+if (isset($_COOKIE['username']) && isset($_COOKIE['role'])) {
+    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['role'] = $_COOKIE['role'];
 }
 
 $error_message = ''; // Variabel untuk menyimpan pesan error
@@ -10,12 +23,6 @@ $error_message = ''; // Variabel untuk menyimpan pesan error
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $service_name = $_POST['service_name'];
     $description = $_POST['description'];
-
-    // Koneksi ke database
-    $conn = new mysqli('localhost', 'root', '', 'konselingdb');
-    if ($conn->connect_error) {
-        die("Koneksi gagal: " . $conn->connect_error);
-    }
 
     // Cek apakah layanan sudah ada
     $sql_check = "SELECT * FROM services WHERE service_name = ?";
