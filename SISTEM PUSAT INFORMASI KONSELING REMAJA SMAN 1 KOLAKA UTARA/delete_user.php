@@ -1,14 +1,19 @@
 <?php
 session_start();
-// Cek apakah admin sudah login
-if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+include('db_connection.php'); // Koneksi ke database
+
+// Periksa sesi atau cookie
+if ((!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') &&
+    (!isset($_COOKIE['username']) || $_COOKIE['role'] !== 'admin')) {
     header('Location: login.php');
     exit();
 }
 
-$conn = new mysqli('localhost', 'root', '', 'konselingdb');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Jika cookie ada, sinkronkan dengan session
+if (isset($_COOKIE['username']) && isset($_COOKIE['role'])) {
+    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['role'] = $_COOKIE['role'];
+    $_SESSION['nisn'] = $_COOKIE['nisn'];
 }
 
 // Ambil data user berdasarkan id
