@@ -1,8 +1,16 @@
 <?php
 session_start();
-session_unset(); // Menghapus semua session
-session_destroy(); // Menghancurkan session
 
-header('Location: landingpage.html'); // Arahkan kembali ke login
+// Hapus sesi
+session_unset();
+session_destroy();
+
+// Hapus cookie
+setcookie('username', '', time() - 3600, "/");
+setcookie('role', '', time() - 3600, "/");
+setcookie('nisn', '', time() - 3600, "/");
+
+// Redirect ke halaman dashboard
+header("Location: index.html");
 exit();
 ?>
