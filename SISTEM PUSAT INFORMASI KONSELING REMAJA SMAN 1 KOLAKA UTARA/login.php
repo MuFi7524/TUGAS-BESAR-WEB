@@ -1,10 +1,14 @@
 <?php
-// Mulai sesi
 session_start();
+include('db_connection.php'); // Koneksi ke database
 
-// Periksa apakah sudah login dan arahkan ke dashboard yang sesuai
-if (isset($_SESSION['username'])) {
-    if ($_SESSION['role'] == 'admin') {
+// Periksa apakah sudah login melalui cookie atau session
+if (isset($_COOKIE['username']) && isset($_COOKIE['role'])) {
+    $_SESSION['username'] = $_COOKIE['username'];
+    $_SESSION['role'] = $_COOKIE['role'];
+    $_SESSION['nisn'] = $_COOKIE['nisn'];
+
+    if ($_COOKIE['role'] == 'admin') {
         header('Location: admin_dashboard.php');
     } else {
         header('Location: profile.php');
@@ -14,19 +18,13 @@ if (isset($_SESSION['username'])) {
 
 // Proses form login ketika tombol submit ditekan
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ambil data dari form
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    // Koneksi ke database
-    $conn = new mysqli('localhost', 'root', '', 'konselingdb');
-
-    // Periksa koneksi
     if ($conn->connect_error) {
         die("Koneksi gagal: " . $conn->connect_error);
     }
 
-    // Query untuk memeriksa pengguna di database
     $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ss", $username, $password);
@@ -34,15 +32,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Pengguna ditemukan, ambil data
         $user = $result->fetch_assoc();
 
-        // Simpan informasi pengguna ke sesi
+        // Simpan data ke session
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
-        $_SESSION['nisn'] = $user['nisn']; // Ambil NISN dari tabel users
+        $_SESSION['nisn'] = $user['nisn'];
 
-        // Redirect berdasarkan role pengguna
+        // Simpan data ke cookie selama 1 jam
+        setcookie('username', $user['username'], time() + 3600, "/");
+        setcookie('role', $user['role'], time() + 3600, "/");
+        setcookie('nisn', $user['nisn'], time() + 3600, "/");
+
         if ($user['role'] == 'admin') {
             header('Location: admin_dashboard.php');
         } else {
@@ -50,11 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         exit();
     } else {
-        // Jika login gagal, tampilkan pesan error
         $error_message = "Username atau password salah!";
     }
 
-    // Tutup koneksi
     $stmt->close();
     $conn->close();
 }
@@ -70,31 +69,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script>
         // Fungsi untuk validasi form
         function validateForm(event) {
-            // Ambil nilai dari input
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
-            var errorMessage = ''; // Inisialisasi pesan error
+            var errorMessage = '';
 
-            // Validasi username
             if (username.trim() === '' && password.trim() === '') {
                 errorMessage += 'Username dan Password tidak boleh kosong.\n';
             } else {
-                // Validasi username
                 if (username.trim() === '') {
                     errorMessage += 'Username tidak boleh kosong.\n';
                 }
-
-                // Validasi password
                 if (password.trim() === '') {
                     errorMessage += 'Password tidak boleh kosong.\n';
                 }
             }
 
-            // Jika ada error, tampilkan pesan dan batalkan submit
             if (errorMessage) {
-                event.preventDefault(); // Mencegah pengiriman form
-                document.getElementById('form-error').innerText = errorMessage; // Tampilkan pesan error di halaman
-                document.getElementById('form-error').style.display = 'block'; // Tampilkan pesan error
+                event.preventDefault();
+                document.getElementById('form-error').innerText = errorMessage;
+                document.getElementById('form-error').style.display = 'block';
             }
         }
     </script>
@@ -105,8 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Login Form Container -->
         <div class="login-form-container">
             <h2>Login</h2>
-
-            <!-- Form login dengan onsubmit untuk validasi -->
             <form action="login.php" method="POST" onsubmit="validateForm(event)">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username">
@@ -114,12 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" id="password" name="password">
                 <button type="submit">Login</button>
             </form>
-
-            <!-- Pesan kesalahan jika ada -->
             <p id="form-error" class="error" style="display: <?php echo isset($error_message) ? 'block' : 'none'; ?>;">
                 <?php echo isset($error_message) ? $error_message : ''; ?>
             </p>
         </div>
+
         <!-- Right Background Section with Logo -->
         <div class="background-container">
             <div class="logo-background">
