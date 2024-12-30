@@ -108,32 +108,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $update_credentials_message = "Username atau password lama salah.";
         }
     }
+}
 
-    // Handle hapus akun
-    if (isset($_POST['delete_account'])) {
-        $confirm_password = $_POST['confirm_password'];
+// Handle hapus akun
+if (isset($_POST['delete_account'])) {
+    $confirm_password = $_POST['confirm_password'];
 
-        $sql_check_password = "SELECT * FROM users WHERE nisn = ? AND password = ?";
-        $stmt_check_password = $conn->prepare($sql_check_password);
-        $stmt_check_password->bind_param('ss', $nisn, $confirm_password);
-        $stmt_check_password->execute();
-        $result_password = $stmt_check_password->get_result();
+    $sql_check_password = "SELECT * FROM users WHERE nisn = ? AND password = ?";
+    $stmt_check_password = $conn->prepare($sql_check_password);
+    $stmt_check_password->bind_param('ss', $nisn, $confirm_password);
+    $stmt_check_password->execute();
+    $result_password = $stmt_check_password->get_result();
 
-        if ($result_password->num_rows > 0) {
-            $sql_delete = "DELETE FROM users WHERE nisn = ?";
-            $stmt_delete = $conn->prepare($sql_delete);
-            $stmt_delete->bind_param('s', $nisn);
+    if ($result_password->num_rows > 0) {
+        // Mulai transaksi untuk memastikan semua data dihapus dengan konsisten
+        $conn->begin_transaction();
 
-            if ($stmt_delete->execute()) {
-                session_destroy();
-                header('Location: login.php');
-                exit();
-            } else {
-                $delete_account_message = "Gagal menghapus akun.";
-            }
-        } else {
-            $delete_account_message = "Password konfirmasi salah.";
+        try {
+            // Hapus data dari tabel students
+            $sql_delete_students = "DELETE FROM students WHERE nisn = ?";
+            $stmt_delete_students = $conn->prepare($sql_delete_students);
+            $stmt_delete_students->bind_param('s', $nisn);
+            $stmt_delete_students->execute();
+
+            // Hapus data dari tabel users
+            $sql_delete_users = "DELETE FROM users WHERE nisn = ?";
+            $stmt_delete_users = $conn->prepare($sql_delete_users);
+            $stmt_delete_users->bind_param('s', $nisn);
+            $stmt_delete_users->execute();
+
+            // Commit transaksi
+            $conn->commit();
+
+            // Hapus session
+            session_unset();
+            session_destroy();
+
+            // Hapus cookie
+            setcookie('username', '', time() - 3600, '/');
+            setcookie('role', '', time() - 3600, '/');
+
+            // Redirect ke halaman utama
+            header('Location: index.html');
+            exit();
+        } catch (Exception $e) {
+            // Rollback jika ada kesalahan
+            $conn->rollback();
+            $delete_account_message = "Gagal menghapus akun. Silakan coba lagi.";
         }
+    } else {
+        $delete_account_message = "Password konfirmasi salah.";
     }
 }
 
